@@ -118,13 +118,17 @@ public class ChallengeInstance {
         }
         
         // Add story battle targets
-        if (this.getExcel().getStoryExcel() != null) {
+        if (this.getExcel().getType() == ChallengeType.STORY) {
             // Add base score counter
             battle.addBattleTarget(1, 10001, this.getTotalScore());
             // Add battle targets from story excel
             for (int id : getExcel().getStoryExcel().getBattleTargetID()) {
                 battle.addBattleTarget(5, id, this.getTotalScore());
             }
+        } else if (this.getExcel().getType() == ChallengeType.BOSS) {
+            // Remaining action count
+            battle.addBattleTarget(1, 90004, 0);
+            battle.addBattleTarget(1, 90005, 0);
         }
     }
     
@@ -275,13 +279,13 @@ public class ChallengeInstance {
             case STORY -> {
                 if (this.getBuffs() != null) {
                     int buffId = this.getBuffs().getInt(this.getCurrentStage() - 1);
-                    proto.getMutableStoryInfo().getMutableCurStoryBuffs().addBuffList(buffId);
+                    proto.getMutableExtInfo().getMutableCurStoryBuffs().addBuffList(buffId);
                 }
             }
             case BOSS -> {
                 if (this.getBuffs() != null) {
                     int buffId = this.getBuffs().getInt(this.getCurrentStage() - 1);
-                    proto.getMutableStoryInfo().getMutableCurBossBuffs().addBuffList(buffId);
+                    proto.getMutableExtInfo().getMutableCurBossBuffs().addBuffList(buffId);
                 }
             }
             default -> {
